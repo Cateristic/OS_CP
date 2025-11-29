@@ -15,30 +15,60 @@ void printTable(struct Process p[], int finish[], int tat[], int wt[], int n) {
 
 // ---------------- FCFS ----------------
 void fcfs(struct Process p[], int n) {
+
+    // -------- SORT BY ARRIVAL TIME --------
+    for(int i = 0; i < n - 1; i++) {
+        for(int j = i + 1; j < n; j++) {
+            if(p[i].arrival > p[j].arrival) {
+                struct Process temp = p[i];
+                p[i] = p[j];
+                p[j] = temp;
+            }
+        }
+    }
+
     int finish[n], tat[n], wt[n], time = 0;
 
     printf("\n--- FCFS Scheduling ---\nGantt Chart:\n");
 
-    for (int i = 0; i < n; i++) {
-        if (time < p[i].arrival) time = p[i].arrival;
+    // -------- GANTT CHART PRINT --------
+    for(int i = 0; i < n; i++) {
+        
+        // If CPU is idle before this process arrives
+        if(time < p[i].arrival) {
+            printf("| IDLE ");
+            time = p[i].arrival;
+        }
+
         printf("| %s ", p[i].name);
         time += p[i].burst;
+
         finish[i] = time;
         tat[i] = finish[i] - p[i].arrival;
         wt[i] = tat[i] - p[i].burst;
     }
+    printf("|\n");
 
-    printf("|\n0");
+    // -------- TIME LINE PRINT --------
     time = 0;
-    for (int i = 0; i < n; i++) {
-        if (time < p[i].arrival) time = p[i].arrival;
+    printf("0");
+    for(int i = 0; i < n; i++) {
+
+        if(time < p[i].arrival) {
+            time = p[i].arrival;
+            printf("   %d", time);
+        }
+
         time += p[i].burst;
         printf("   %d", time);
     }
+
     printf("\n");
 
+    // -------- RESULT TABLE --------
     printTable(p, finish, tat, wt, n);
 }
+
 
 // ---------------- SJF Non-Preemptive ----------------
 void sjf_np(struct Process p[], int n) {

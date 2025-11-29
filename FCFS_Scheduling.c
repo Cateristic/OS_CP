@@ -24,6 +24,17 @@ int main() {
         scanf("%d", &p[i].burst);
     }
 
+    // Sort processes by arrival time (FCFS rule)
+    for (int i = 0; i < n-1; i++) {
+        for (int j = i+1; j < n; j++) {
+            if (p[i].arrival > p[j].arrival) {
+                struct Process temp = p[i];
+                p[i] = p[j];
+                p[j] = temp;
+            }
+        }
+    }
+
     // FCFS Scheduling
     printf("\n\n--- FCFS Scheduling ---\nGantt Chart:\n");
 
